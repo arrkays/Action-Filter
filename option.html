@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="option.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div id="divSave">
+			<select id="selectAcount"></select>
+			<button id="save">save</button>
+		</div>
+		<div id="filtres">
+		</div>
+
+		<!-- <button >ajout filtre</button> -->
+		<div id="ajout_filtre">
+			<button>Ajouter filtre</button>
+		</div>
+		
+		<!-- source element to build filter -->
+		
+		<!-- FILTRE -->
+		<div id="sourceFiltre" style="display:none">
+			<div class="titreFiltre"></div>
+			<input type="checkbox" checked class="isAnd" /> Toutue les conditions doivent être vrai.<br/>
+			<div class="listCondi"></div>
+			<div class="ajouter">⨁</div>
+			<input type="text" class="dest" placeholder="destination" />
+			<div class="supFiltre">❌</div>
+		</div>
+		
+		<!-- LIGNE CONDI -->
+		<div id="sourceLineCondi" style="display:none">
+			<select class="selectElement">
+				<option value="subject">sujet</option>
+				<option value="author">de</option>
+				<option value="recipients">pour</option>
+				<option value="tags">étiquette</option>
+			</select> 
+			<select class="selectCondition">
+				<option value="contient">contient</option>
+				<option value="contientPas">ne contient pas</option>
+				<option value="est">est</option>
+			</select> 
+			<input type="text"/> <button class="supCondi" > supprimer </button> 
+		</div>
+		<script src="options.js"></script>
+	</body>
+</html>

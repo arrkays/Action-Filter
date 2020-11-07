@@ -1,0 +1,53 @@
+{
+	
+  "manifest_version": 2,
+  "name": "action_filter",
+  "description": "__MSG_extensionDescription__",
+  "version": "1.0",
+  "default_locale": "fr",
+  "browser_specific_settings": {
+    "gecko": {
+      "strict_min_version": "78",
+	  "id": "florent.mouneau@filter.com"
+    }
+  },
+
+
+	
+  "background": {
+    "scripts": ["background.js"]
+  },
+  
+  "permissions": [
+    "menus",
+    "messagesRead",
+    "messagesMove",
+    "activeTab",
+    "tabs",
+    "tabHide",
+    "accountsFolders",
+    "accountsRead",
+    "downloads",
+    "activeTab",
+	"storage"
+  ],
+  
+  
+  "options_ui": {
+  "page": "option.html",
+  "browser_style": true
+},
+   "browser_action": {
+    "default_icon": {
+      "16": "icons/page-16.png",
+      "32": "icons/page-32.png"
+    }
+  },
+  
+  "icons": {
+    "16": "icons/page-16.png",
+    "32": "icons/page-32.png",
+    "48": "icons/page-48.png"
+  }
+
+}
