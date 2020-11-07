@@ -4,8 +4,9 @@
 
 #selectAcount{
 	position: absolute;
-	left:10px;
-	top:10px;
+	left: 16px;
+	top: 15px;
+	font-size: 19px;
 }
 
 .titreFiltre{
@@ -26,7 +27,7 @@
 }
 
 .lineCondi input[type=text]{
-	width: 270px;
+	width: 290px;
 }
 
 .electElement{

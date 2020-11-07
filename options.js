@@ -1,19 +1,29 @@
-load();
-addAcount()
+let accountSelected;
+let comptes;
+start();
 
-//file account
-function addAcount(){
-	browser.extension.getBackgroundPage().browser.accounts.list().then((acc)=>{
-		for( var conpte of acc){
-			var selectAccount = document.getElementById("selectAcount");
+//Load acont and filter an select
+async function start(){
+	var stor = await browser.storage.local.get();
+	var acc = await browser.extension.getBackgroundPage().browser.accounts.list();
+	
+	accountSelected = (stor.accountSelected)? stor.accountSelected : acc[0].id;
+	comptes = stor.comptes;
+	
+	for( var conpte of acc){
+		var selectAccount = document.getElementById("selectAcount");
 
-			//add options
-			var o=document.createElement("option");
-			o.value = conpte.id;
-			o.text = conpte.name;
-			selectAccount.add(o);
-		}
-	});
+		//add options
+		var o=document.createElement("option");
+		o.value = conpte.id;
+		o.id = "compte_"+conpte.id;
+		o.text = conpte.name;
+		if(accountSelected == conpte.id)
+			o.selected="selected";
+		selectAccount.add(o);
+	}
+	
+	load(accountSelected)
 }
 /**
  * EVENT
@@ -118,16 +128,18 @@ function save(){
 			filtres.push(newFiltre);
 	});
 	
-	browser.storage.local.set({"filtres":filtres}).then(()=>{
+	comptes[accountSelected] = filtres;
+	
+	browser.storage.local.set({"comptes":comptes}).then(()=>{
 		document.querySelector("#save").style.background="grey";
 		//document.querySelector("#save").style.color="white";
-		});
+	});
 }
 
-function load(){
-	browser.storage.local.get().then((e)=>{
-		if(e.filtres){
-			makeFilters(e.filtres);
+function load(compte){
+	browser.storage.local.get().then((store)=>{
+		if(store.comptes[compte]){
+			makeFilters(store.comptes[compte]);
 		}
 	});
 }

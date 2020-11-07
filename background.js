@@ -1,21 +1,44 @@
 //load filter
-let filtres;
-let msgSelecttionner;
+let comptes;
+let selectedMesages;
 let tabDest;
 
 browser.storage.local.get().then((e)=>{
-	filtres = e.filtres;
-	console.log("filtres loaded in background");
+	if(e.comptes){
+		comptes = e.comptes
+	}
+	else{
+		firstOpen();
+	}
+	console.log("comptes loaded in background");
 });
 
 browser.storage.onChanged.addListener((changes, areaName)=>{
-	//filtres = e.filtres;
 	console.log("background Storage Update");
 	browser.storage.local.get().then((e)=>{
-		filtres = e.filtres;
-		console.log("filtres loaded in background");
+		comptes = e.comptes
+		console.log("comptes loaded in background");
 	});
 });
+
+function firstOpen(){
+	console.log("first opne");
+	comptes = {};
+	
+	browser.accounts.list().then((acc)=>{
+		for( var conpte of acc){
+			console.log(conpte.id);
+			comptes[conpte.id] = [];
+		}
+		
+		browser.storage.local.set({"comptes":comptes}).then(()=>{
+			console.log("first open");
+			console.log("structure compte saves");
+		});
+	});
+	
+
+}
 
 /*
 Called when the item has been created, or when creation failed due to an error.
@@ -53,23 +76,26 @@ id = dossier destination
 */
 browser.menus.onClicked.addListener((info, tab) => {
 	var id = info.menuItemId;
-	dest = {accountId:"account1", path:id};
+	dest = {accountId:selectedMesages[0].folder.accountId, path:id};
 	
-	msgId = [];
-	msgSelecttionner.forEach((m)=>msgId.push(m.id));
-	
-	browser.messages.move(msgId,dest);
+	moveMessages(dest);
 });
 
+function moveMessages(dest){
+	msgId = [];
+	selectedMesages.forEach((m)=>msgId.push(m.id));
+	
+	console.log(selectedMesages);
+	console.log(dest);
+	browser.messages.move(msgId,dest);
+}
+
 browser.mailTabs.onSelectedMessagesChanged.addListener((tab, selectedMessages) =>{
-	browser.menus.removeAll();
-	
-	console.log(selectedMessages);
-	
+	//browser.menus.removeAll();
 	tabDest = findDestination(selectedMessages.messages[0]);
-	msgSelecttionner = selectedMessages.messages;
+	selectedMesages = selectedMessages.messages;
 	
-	for(var i = 0; i < tabDest.length; i++){
+	/*for(var i = 0; i < tabDest.length; i++){
 		var title = tabDest[i].split("/");
 		title = title[title.length-1];
 		console.log(title);
@@ -78,14 +104,14 @@ browser.mailTabs.onSelectedMessagesChanged.addListener((tab, selectedMessages) =
 			title: title,
 			contexts: ["message_list"]
 		}, onCreated);
-	}
-
+	}*/
 });
 
 function findDestination(msg){
 	var listeDest = [];
+	compteMsgId = msg.folder.accountId;
 	
-	filtres.forEach((f)=>{
+	comptes[compteMsgId].forEach((f)=>{
 		filtreVrai = false;
 		if(f.isAnd)
 			filtreVrai = et(f.condition,msg);
@@ -106,37 +132,113 @@ function et(condition, msg){
 	var res = true;
 	console.log(condition);
 	for(let condi of condition){
-		console.log(condi);
+
+		let msgElmnt = concatElement(msg[condi.element]);
+		console.log(msgElmnt+" "+condi.operateur+" "+condi.pattern +"?");
 		//contien
 		if(condi.operateur == "contient"){
-			console.log(msg[condi.element]+".indexOf("+condi.pattern+")");
-			if(msg[condi.element].indexOf(condi.pattern) == -1){
+			if(msgElmnt.indexOf(condi.pattern) == -1){
 				res = false;
 				break;
 			}
 		}
 		else if(condi.operateur == "contientPas"){
-			console.log(msg[condi.element]+".indexOf("+condi.pattern+")");
-			if(msg[condi.element].indexOf(condi.pattern) == -1){
+			if(msgElmnt.indexOf(condi.pattern) == -1){
+				res = false;
+				break;
+			}
+		}
+		else if(condi.operateur == "estPas"){
+			if(msgElmnt == condi.pattern){
 				res = false;
 				break;
 			}
 		}
 		else if(condi.operateur == "est"){
-			if(msg[condi.element] != condi.pattern){
+			if(msgElmnt != condi.pattern){
 				res = false;
 				break;
 			}
 		}
 		else if(condi.operateur == "commence"){
-			if(!msg[condi.element].startWith(condi.pattern)){
+			if(!msgElmnt.startWith(condi.pattern)){
+				res = false;
+				break;
+			}
+		}
+		else if(condi.operateur == "fini"){
+			if(!msgElmnt.endsWith(condi.pattern)){
 				res = false;
 				break;
 			}
 		}
 		
 	}
+	console.log(res);
 	return res;
+}
+
+function ou(condition, msg){
+	var res = false;
+	console.log(condition);
+	for(let condi of condition){
+
+		let msgElmnt = concatElement(msg[condi.element]);
+		console.log(msgElmnt+" "+condi.operateur+" "+condi.pattern +"?");
+		//contien
+		if(condi.operateur == "contient"){
+			if(msgElmnt.indexOf(condi.pattern) != -1){
+				res = true;
+				break;
+			}
+		}
+		else if(condi.operateur == "contientPas"){
+			if(msgElmnt.indexOf(condi.pattern) != -1){
+				res = true;
+				break;
+			}
+		}
+		else if(condi.operateur == "estPas"){
+			if(msgElmnt != condi.pattern){
+				res = true;
+				break;
+			}
+		}
+		else if(condi.operateur == "est"){
+			if(msgElmnt == condi.pattern){
+				res = true;
+				break;
+			}
+		}
+		else if(condi.operateur == "commence"){
+			if(msgElmnt.startWith(condi.pattern)){
+				res = true;
+				break;
+			}
+		}
+		else if(condi.operateur == "fini"){
+			if(msgElmnt.endsWith(condi.pattern)){
+				res = true;
+				break;
+			}
+		}
+	}
+	console.log(res);
+	return res;
+}
+
+//renvoi la concaténation des string présent dans un tableau ou la string si string passer en param
+function concatElement(e){
+	if(Array.isArray(e)){
+		let res="";
+		for(let s of e){
+			res+=s;
+		}
+		return res;
+	}	
+	else{
+		return e;
+	}
 }
 
 browser.menus.onShown.addListener((info, tab) => {
@@ -154,8 +256,9 @@ browser.menus.onShown.addListener((info, tab) => {
 		tabDest = findDestination(info.selectedMessages.messages[0]);
 		
 		//on dit quelle message doit erte deplacé
-		msgSelecttionner = info.selectedMessages.messages;
+		selectedMesages = info.selectedMessages.messages;
 		
+	}
 		//on créé le menu
 		for(var i = 0; i < tabDest.length; i++){
 			var title = tabDest[i].split("/");
@@ -169,10 +272,8 @@ browser.menus.onShown.addListener((info, tab) => {
 		}
 		
 		browser.menus.refresh()
-	}
 });
 
 browser.browserAction.onClicked.addListener(()=>{
-	// browser.runtime.openOptionsPage()
-	browser.windows.getCurrent({}).then((e)=>console.log(e));
+	browser.runtime.openOptionsPage()
 });
