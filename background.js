@@ -70,6 +70,19 @@ browser.menus.create({
 }, onCreated);
 
 
+/*************** Déplacement des message *************************/
+
+//Action display message
+browser.messageDisplayAction.onClicked.addListener(()=>moveMessages());
+
+
+//racourci clavier
+browser.commands.onCommand.addListener(function (command) {
+	if (command === "range") {
+		moveMessages();
+	}
+});
+
 /*
 Click itème menu
 id = dossier destination 
@@ -77,34 +90,45 @@ id = dossier destination
 browser.menus.onClicked.addListener((info, tab) => {
 	var id = info.menuItemId;
 	dest = {accountId:selectedMesages[0].folder.accountId, path:id};
-	
 	moveMessages(dest);
 });
 
-function moveMessages(dest){
-	msgId = [];
-	selectedMesages.forEach((m)=>msgId.push(m.id));
-	
-	console.log(selectedMesages);
-	console.log(dest);
-	browser.messages.move(msgId,dest);
+function moveMessages(dest = false){
+	//si message a déplacer
+	if(selectedMesages && tabDest && selectedMesages.length && tabDest.length){
+		msgId = [];
+		selectedMesages.forEach((m)=>msgId.push(m.id));
+		
+		//si destination non précisé
+		if(typeof dest != 'object'){
+			dest = {accountId:selectedMesages[0].folder.accountId, path:tabDest[0]};
+		}
+		browser.messages.move(msgId,dest);
+	}
 }
 
+//action display message
+//met titre et info si dest trouvé
+function updateButton(){
+	let enable = false;
+	if(selectedMesages && tabDest && selectedMesages.length && tabDest.length){
+		//on affiche le bouton
+		browser.messageDisplayAction.enable();
+		
+		//definition du titre
+		var title = tabDest[0].split("/");
+		title = title[title.length-1];
+		browser.messageDisplayAction.setTitle({"title": title});
+	}
+	else
+		browser.messageDisplayAction.disable();
+}
+
+//Message change
 browser.mailTabs.onSelectedMessagesChanged.addListener((tab, selectedMessages) =>{
-	//browser.menus.removeAll();
 	tabDest = findDestination(selectedMessages.messages[0]);
 	selectedMesages = selectedMessages.messages;
-	
-	/*for(var i = 0; i < tabDest.length; i++){
-		var title = tabDest[i].split("/");
-		title = title[title.length-1];
-		console.log(title);
-		browser.menus.create({
-			id: tabDest[i],
-			title: title,
-			contexts: ["message_list"]
-		}, onCreated);
-	}*/
+	updateButton();
 });
 
 function findDestination(msg){
@@ -263,7 +287,6 @@ browser.menus.onShown.addListener((info, tab) => {
 		for(var i = 0; i < tabDest.length; i++){
 			var title = tabDest[i].split("/");
 			title = title[title.length-1];
-			console.log(title);
 			browser.menus.create({
 				id: tabDest[i],
 				title: title,
@@ -277,3 +300,4 @@ browser.menus.onShown.addListener((info, tab) => {
 browser.browserAction.onClicked.addListener(()=>{
 	browser.runtime.openOptionsPage()
 });
+

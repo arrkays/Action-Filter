@@ -29,6 +29,14 @@ async function start(){
  * EVENT
  */
 
+//compte selection
+document.querySelector('#selectAcount').addEventListener('change', (e)=>{
+	accountSelected = document.querySelector('#selectAcount').value;
+	browser.storage.local.set({"accountSelected":accountSelected});
+	document.querySelector('#filtres').innerHTML = "";
+	load(accountSelected);
+});
+
 //ajout filtre event
 document.querySelector('#ajout_filtre').addEventListener('click', (e)=>{
 	
@@ -37,6 +45,7 @@ document.querySelector('#ajout_filtre').addEventListener('click', (e)=>{
 		var f = addFiltre(titre);
 		addCondi(f);
 	}
+	document.querySelector('#save').style.background="#0060DF";
 });
 
 
@@ -45,6 +54,14 @@ function addEventCondi(ligne){
 	ligne.querySelector('.supCondi').addEventListener('click', (e)=>{
 		var divCondi = e.target.parentElement;
 		divCondi.remove();
+		document.querySelector('#save').style.background="#0060DF";
+	});
+	
+	//save redevien bleu si modif
+	console.log("save blue evvent");
+	ligne.querySelectorAll('input, select').forEach((e)=>{
+		e.addEventListener('change', ()=>{document.querySelector('#save').style.background="#0060DF"})
+		console.log(e);
 	});
 }
 
@@ -52,6 +69,7 @@ function addEventFiltre(filtre){
 	//suprimer filtre
 	filtre.querySelector('.supFiltre').addEventListener('click', (e)=>{
 		e.target.parentElement.remove();
+		document.querySelector('#save').style.background="#0060DF";
 	});
 
 	
@@ -61,12 +79,20 @@ function addEventFiltre(filtre){
 		if(titre){
 			e.target.innerHTML = titre;
 		}
+		document.querySelector('#save').style.background="#0060DF";
 	});
 	
 	//Ajouter ligne conditionelle
 	filtre.querySelector('.ajouter').addEventListener('click', (e)=>{
 		var divFiltre = e.target.parentElement.children[3];
 		addCondi(e.target.parentElement);
+		document.querySelector('#save').style.background="#0060DF";
+	});
+	
+	
+	//save redevien bleu si modif
+	filtre.querySelectorAll('input').forEach((e)=>{
+		e.addEventListener('change', ()=>{document.querySelector('#save').style.background="#0060DF"})
 	});
 }
 
@@ -126,10 +152,13 @@ function save(){
 		//on l'ajoute  a la colection si pattern et si destination
 		if(newFiltre.condition && newFiltre.destination)
 			filtres.push(newFiltre);
+		else
+			alert("Le filtre "+titreFiltre+" doit contenir au moins une destination et un filtre");
 	});
 	
-	comptes[accountSelected] = filtres;
 	
+	comptes[accountSelected] = filtres;
+
 	browser.storage.local.set({"comptes":comptes}).then(()=>{
 		document.querySelector("#save").style.background="grey";
 		//document.querySelector("#save").style.color="white";
