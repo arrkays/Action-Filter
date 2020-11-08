@@ -1,8 +1,8 @@
 {
 	
   "manifest_version": 2,
-  "name": "action_filter",
-  "description": "__MSG_extensionDescription__",
+  "name": "Action filter",
+  "description": "Déplace les messages en fonction de filtres sur action",
   "version": "1.0",
   "default_locale": "fr",
   "browser_specific_settings": {
@@ -12,7 +12,7 @@
     }
   },
 
-
+	"author": "Florent Mouneau",
 	
   "background": {
     "scripts": ["background.js"]

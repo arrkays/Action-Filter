@@ -1,7 +1,10 @@
-//load filter
+//variable globale
 let comptes;
 let selectedMesages;
 let tabDest;
+
+//on desactive l'actionmessage a l'ouvertur
+browser.messageDisplayAction.disable();
 
 browser.storage.local.get().then((e)=>{
 	if(e.comptes){
@@ -36,38 +39,7 @@ function firstOpen(){
 			console.log("structure compte saves");
 		});
 	});
-	
-
 }
-
-/*
-Called when the item has been created, or when creation failed due to an error.
-We'll just log success/failure here.
-*/
-function onCreated() {
-  if (browser.runtime.lastError) {
-    console.log(`Error: ${browser.runtime.lastError}`);
-  } else {
-    console.log("Item created successfully");
-  }
-}
-
-/*
-Called when there was an error.
-We'll just log the error here.
-*/
-function onError(error) {
-  console.log(`Error: ${error}`);
-}
-
-/*
-Create all the context menu items.
-*/
-browser.menus.create({
-  id: "mouve-mail",
-  title: "ranger",
-  contexts: ["message_list"]
-}, onCreated);
 
 
 /*************** Déplacement des message *************************/
@@ -101,7 +73,7 @@ function moveMessages(dest = false){
 		
 		//si destination non précisé
 		if(typeof dest != 'object'){
-			dest = {accountId:selectedMesages[0].folder.accountId, path:tabDest[0]};
+			dest = {accountId:selectedMesages[0].folder.accountId, path:tabDest[0].destReelle};
 		}
 		browser.messages.move(msgId,dest);
 	}
@@ -116,7 +88,7 @@ function updateButton(){
 		browser.messageDisplayAction.enable();
 		
 		//definition du titre
-		var title = tabDest[0].split("/");
+		var title = tabDest[0].dest.split("/");
 		title = title[title.length-1];
 		browser.messageDisplayAction.setTitle({"title": title});
 	}
@@ -126,9 +98,11 @@ function updateButton(){
 
 //Message change
 browser.mailTabs.onSelectedMessagesChanged.addListener((tab, selectedMessages) =>{
-	tabDest = findDestination(selectedMessages.messages[0]);
-	selectedMesages = selectedMessages.messages;
-	updateButton();
+	if(selectedMessages.messages){
+		tabDest = findDestination(selectedMessages.messages[0]);
+		selectedMesages = selectedMessages.messages;
+		updateButton();
+	}
 });
 
 function findDestination(msg){
@@ -142,8 +116,10 @@ function findDestination(msg){
 		else
 			filtreVrai = ou(f.condition,msg);
 		
-		if(filtreVrai)
-			listeDest.push(f.destination);
+		if(filtreVrai){
+			listeDest.push({destReelle:f.destinationReelle, dest:f.destination});
+			
+		}
 	});	
 
 	//verifier qu'il n'y a pas de doublon dans les destination
@@ -154,11 +130,10 @@ function findDestination(msg){
 
 function et(condition, msg){
 	var res = true;
-	console.log(condition);
 	for(let condi of condition){
 
 		let msgElmnt = concatElement(msg[condi.element]);
-		console.log(msgElmnt+" "+condi.operateur+" "+condi.pattern +"?");
+		console.log(msgElmnt+" ----> "+condi.operateur+" <---- "+condi.pattern +"?");
 		//contien
 		if(condi.operateur == "contient"){
 			if(msgElmnt.indexOf(condi.pattern) == -1){
@@ -196,9 +171,7 @@ function et(condition, msg){
 				break;
 			}
 		}
-		
 	}
-	console.log(res);
 	return res;
 }
 
@@ -266,7 +239,6 @@ function concatElement(e){
 }
 
 browser.menus.onShown.addListener((info, tab) => {
-	console.log("onShon=>");
 	console.log(info.selectedMessages.messages);
 	
 	//si le message click droité n'est pas selectionné
@@ -274,7 +246,6 @@ browser.menus.onShown.addListener((info, tab) => {
 		//on recréé un menu juste pour ce mesage
 		
 		browser.menus.removeAll();
-		console.log(info.selectedMessages);
 		
 		//on trouve les destination par raport au filtre
 		tabDest = findDestination(info.selectedMessages.messages[0]);
@@ -285,13 +256,13 @@ browser.menus.onShown.addListener((info, tab) => {
 	}
 		//on créé le menu
 		for(var i = 0; i < tabDest.length; i++){
-			var title = tabDest[i].split("/");
+			var title = tabDest[i].dest.split("/");
 			title = title[title.length-1];
 			browser.menus.create({
-				id: tabDest[i],
+				id: tabDest[i].destReelle,
 				title: title,
 				contexts: ["message_list"]
-			}, onCreated);
+			});
 		}
 		
 		browser.menus.refresh()

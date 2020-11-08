@@ -53,6 +53,7 @@
 
 .dest{
 	width : 100%;
+	cursor:poiter;
 }
 
 .supFiltre{
@@ -95,4 +96,59 @@
 	width: 66px;
 	font-size: 23px;
 	cursor:pointer;
+}
+
+.explorer{
+	background: white;
+	position: absolute;
+	left: 10px;
+	bottom: 32px;
+	width: 585px;
+	height: 128px;
+	border: solid black 1px;
+	overflow-y: scroll;
+	display:none;
+	padding: 2px;
+}
+
+.explorer div{
+	display: inline-block;
+    width: 140px;
+    height: 24px;
+    overflow: hidden;
+	cursor:pointer;
+	white-space: nowrap;
+    /* border: solid 1px; */
+}
+
+.explorer div:hover{
+	background:#ddf
+}
+
+.icoFolder{
+	font-size:14px;
+}
+.icoFolderRetour{
+	color: blue;
+	font-size: 22px;
+	font-weight: bold;
+	margin-left: 2px;
+	line-height: 71%;
+}
+
+.valideFolder{
+	display:none;
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	cursor:pointer;
+	width:80px;
+}
+
+.parcourir{
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	cursor:pointer;
+	width:80px;
 }

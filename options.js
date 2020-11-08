@@ -58,10 +58,8 @@ function addEventCondi(ligne){
 	});
 	
 	//save redevien bleu si modif
-	console.log("save blue evvent");
 	ligne.querySelectorAll('input, select').forEach((e)=>{
 		e.addEventListener('change', ()=>{document.querySelector('#save').style.background="#0060DF"})
-		console.log(e);
 	});
 }
 
@@ -93,6 +91,30 @@ function addEventFiltre(filtre){
 	//save redevien bleu si modif
 	filtre.querySelectorAll('input').forEach((e)=>{
 		e.addEventListener('change', ()=>{document.querySelector('#save').style.background="#0060DF"})
+	});
+	
+	filtre.querySelector('.dest').addEventListener('click', ()=>{
+		browser.extension.getBackgroundPage().browser.accounts.get(accountSelected).then((e)=>{
+			buildExplorer(e.folders, filtre);
+			filtre.querySelector('.valideFolder').style.display = "block";
+			filtre.querySelector('.parcourir').style.display = "none";
+		});
+	});
+	
+	filtre.querySelector('.parcourir').addEventListener('click', ()=>{
+		browser.extension.getBackgroundPage().browser.accounts.get(accountSelected).then((e)=>{
+			buildExplorer(e.folders, filtre);
+			filtre.querySelector('.valideFolder').style.display = "block";
+			filtre.querySelector('.parcourir').style.display = "none";
+			document.querySelector('#save').style.background="#0060DF";
+		});
+	});
+	
+	filtre.querySelector('.valideFolder').addEventListener('click', ()=>{
+		filtre.querySelector('.explorer').style.display = "none";
+		filtre.querySelector('.valideFolder').style.display = "none";
+		filtre.querySelector('.parcourir').style.display = "block";
+		document.querySelector('#save').style.background="#0060DF";
 	});
 }
 
@@ -131,8 +153,9 @@ function save(){
 		var titreFiltre = filtre.querySelector(".titreFiltre").innerHTML;
 		var isAnd = filtre.querySelector(".isAnd").checked;
 		var dest = filtre.querySelector(".dest").value;
+		var destReelle = filtre.getElementsByClassName("destReelle").value;
 		
-		var newFiltre = {"titre":titreFiltre, condition:[], "isAnd":isAnd, destination:dest};
+		var newFiltre = {"titre":titreFiltre, condition:[], "isAnd":isAnd, destination:dest, destinationReelle:destReelle};
 		
 		//on récupère chaque ligne de condi
 		tabLigneCondi = filtre.querySelectorAll(".lineCondi");
@@ -182,6 +205,7 @@ function makeFilters(filtres){
 		if(filtre.isAnd)
 			filtreDiv.querySelector(".isAnd").checked = true;
 		filtreDiv.querySelector(".dest").value = filtre.destination;
+		filtreDiv.getElementsByClassName("destReelle").value = filtre.destinationReelle;
 		
 		//ajout des condition
 		filtre.condition.forEach((condi)=>{
@@ -192,3 +216,4 @@ function makeFilters(filtres){
 		});
 	});
 }
+
