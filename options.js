@@ -2,7 +2,7 @@ let accountSelected;
 let comptes;
 start();
 
-//Load acont and filter an select
+//Load accout and filter an select
 async function start(){
 	var stor = await browser.storage.local.get();
 	var acc = await browser.extension.getBackgroundPage().browser.accounts.list();
@@ -93,6 +93,7 @@ function addEventFiltre(filtre){
 		e.addEventListener('change', ()=>{document.querySelector('#save').style.background="#0060DF"})
 	});
 	
+	//Explorateur parcourir
 	filtre.querySelector('.dest').addEventListener('click', ()=>{
 		browser.extension.getBackgroundPage().browser.accounts.get(accountSelected).then((e)=>{
 			buildExplorer(e.folders, filtre);
@@ -101,6 +102,7 @@ function addEventFiltre(filtre){
 		});
 	});
 	
+	//Explorateur parcourir
 	filtre.querySelector('.parcourir').addEventListener('click', ()=>{
 		browser.extension.getBackgroundPage().browser.accounts.get(accountSelected).then((e)=>{
 			buildExplorer(e.folders, filtre);
@@ -110,6 +112,7 @@ function addEventFiltre(filtre){
 		});
 	});
 	
+	//Explorateur Valider
 	filtre.querySelector('.valideFolder').addEventListener('click', ()=>{
 		filtre.querySelector('.explorer').style.display = "none";
 		filtre.querySelector('.valideFolder').style.display = "none";
@@ -153,9 +156,8 @@ function save(){
 		var titreFiltre = filtre.querySelector(".titreFiltre").innerHTML;
 		var isAnd = filtre.querySelector(".isAnd").checked;
 		var dest = filtre.querySelector(".dest").value;
-		var destReelle = filtre.getElementsByClassName("destReelle").value;
-		
-		var newFiltre = {"titre":titreFiltre, condition:[], "isAnd":isAnd, destination:dest, destinationReelle:destReelle};
+		var destReelle = filtre.querySelector(".destReelle").value;
+		var newFiltre = {"titre":titreFiltre, condition:[], "isAnd":isAnd, destination:dest, "destinationReelle":destReelle};
 		
 		//on récupère chaque ligne de condi
 		tabLigneCondi = filtre.querySelectorAll(".lineCondi");
@@ -205,7 +207,8 @@ function makeFilters(filtres){
 		if(filtre.isAnd)
 			filtreDiv.querySelector(".isAnd").checked = true;
 		filtreDiv.querySelector(".dest").value = filtre.destination;
-		filtreDiv.getElementsByClassName("destReelle").value = filtre.destinationReelle;
+		filtreDiv.querySelector(".destReelle").value = filtre.destinationReelle;
+
 		
 		//ajout des condition
 		filtre.condition.forEach((condi)=>{

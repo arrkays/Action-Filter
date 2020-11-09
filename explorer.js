@@ -8,11 +8,7 @@ function buildExplorer(folder, divFiltre, tree=""){
 		if(folder.subFolders){//si on est dans un sous dossier
 		
 			tree.push({"name":folder.name, "folder":folder});
-
-			divFiltre.getElementsByClassName("destReelle").value = folder.path;
-			
-			console.log(divFiltre.getElementsByClassName("destReelle"));
-			
+			divFiltre.querySelector(".destReelle").value = folder.path;
 			divFiltre.querySelector(".dest").value = getNamePath(tree);
 			subFolder = folder.subFolders;
 			
@@ -32,7 +28,7 @@ function buildExplorer(folder, divFiltre, tree=""){
 		else{//si on est a la racine
 			tree=[{name:"", "folder":folder}];
 			divFiltre.querySelector(".dest").value = "";
-			divFiltre.getElementsByClassName(".destReelle").value = "";
+			divFiltre.querySelector(".destReelle").value = "";
 			subFolder = folder;
 		}
 		
