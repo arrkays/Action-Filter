@@ -119,6 +119,15 @@ function addEventFiltre(filtre){
 		filtre.querySelector('.parcourir').style.display = "block";
 		document.querySelector('#save').style.background="#0060DF";
 	});
+	
+	//Déplier filtre
+	filtre.querySelector('.depli').addEventListener('click', ()=>{
+		displaFiltre(filtre, "block");
+	});
+	
+	filtre.querySelector('.repli').addEventListener('click', ()=>{
+		displaFiltre(filtre, "none");
+	});
 }
 
 document.querySelector('#save').addEventListener('click', save);
@@ -200,7 +209,7 @@ function load(compte){
 
 
 //on rempli titre et dest 
-function makeFilters(filtres){
+function makeFilters(filtres, display){
 	filtres.forEach((filtre)=>{
 		//creation du filtre
 		filtreDiv = addFiltre(filtre.titre);
@@ -217,6 +226,15 @@ function makeFilters(filtres){
 			ligneCondi.children[1].value = condi.operateur;
 			ligneCondi.children[2].value = condi.pattern;
 		});
+		
+		displaFiltre(filtreDiv, "none");
 	});
 }
 
+function displaFiltre(filtre, val){
+	filtre.querySelector(".listCondi").style.display = val;
+	filtre.querySelector(".ajouter").style.display = val;
+	filtre.querySelector(".divDest").style.display = val;
+	filtre.querySelector(".etOu").style.display = val;
+	filtre.querySelector(".repli").style.display = val;
+}

@@ -16,7 +16,7 @@ function buildExplorer(folder, divFiltre, tree=""){
 			//on me le bouton retour
 			let d = document.createElement("div");
 			d.className = "folder";
-			d.innerHTML = "<span class='icoFolderRetour'> ↰ </span> Retour";
+			d.innerHTML = "<span class='icoFolderRetour'> ⇧ </span> Retour";
 			d.addEventListener("click",()=>{
 				tree.pop();
 				let t = tree.pop();
