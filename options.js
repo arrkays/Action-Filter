@@ -78,6 +78,7 @@ function addEventFiltre(filtre){
 			e.target.innerHTML = titre;
 		}
 		document.querySelector('#save').style.background="#0060DF";
+		e.stopPropagation();
 	});
 	
 	//Ajouter ligne conditionelle
@@ -96,19 +97,22 @@ function addEventFiltre(filtre){
 	//Explorateur parcourir
 	filtre.querySelector('.dest').addEventListener('click', ()=>{
 		browser.extension.getBackgroundPage().browser.accounts.get(accountSelected).then((e)=>{
-			buildExplorer(e.folders, filtre);
+			buildExplorer(e.folders, filtre, filtre.querySelector('.destReelle').value);
 			filtre.querySelector('.valideFolder').style.display = "block";
 			filtre.querySelector('.parcourir').style.display = "none";
+			document.querySelector('#save').style.background="#0060DF";
+			filtre.querySelector('.explorer').style.display = "block";
 		});
 	});
 	
 	//Explorateur parcourir
 	filtre.querySelector('.parcourir').addEventListener('click', ()=>{
 		browser.extension.getBackgroundPage().browser.accounts.get(accountSelected).then((e)=>{
-			buildExplorer(e.folders, filtre);
+			buildExplorer(e.folders, filtre, filtre.querySelector('.destReelle').value);
 			filtre.querySelector('.valideFolder').style.display = "block";
 			filtre.querySelector('.parcourir').style.display = "none";
 			document.querySelector('#save').style.background="#0060DF";
+			filtre.querySelector('.explorer').style.display = "block";
 		});
 	});
 	
@@ -121,13 +125,21 @@ function addEventFiltre(filtre){
 	});
 	
 	//Déplier filtre
-	filtre.querySelector('.depli').addEventListener('click', ()=>{
+	/*filtre.querySelector('.depli').addEventListener('click', ()=>{
 		displaFiltre(filtre, "block");
 	});
 	
 	filtre.querySelector('.repli').addEventListener('click', ()=>{
 		displaFiltre(filtre, "none");
 	});
+	*/
+	filtre.querySelector('.headerFiltre').addEventListener('click', ()=>{
+		//displaFiltre(filtre, "none");
+		//console.log("header been click");
+		toggleFilter(filtre);
+	});
+	
+	
 }
 
 document.querySelector('#save').addEventListener('click', save);
@@ -237,4 +249,14 @@ function displaFiltre(filtre, val){
 	filtre.querySelector(".divDest").style.display = val;
 	filtre.querySelector(".etOu").style.display = val;
 	filtre.querySelector(".repli").style.display = val;
+}
+
+function toggleFilter(filtre){
+	if(filtre.querySelector(".listCondi").style.display == "block"){
+		displaFiltre(filtre, "none");
+	}
+	else{
+		displaFiltre(filtre, "block");
+	}
+	
 }

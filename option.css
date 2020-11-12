@@ -17,16 +17,32 @@
 	box-shadow: 3px 3px 10px #b7b7b7;
 }
 
-.titreFiltre{
+.headerFiltre{
 	text-align: center;
 	margin-top: 0px;
-	margin-right: auto;
+	/* margin-right: auto; */
 	margin-bottom: 0px;
-	margin-left: auto;
+	/* margin-left: auto; */
 	font-weight: bold;
 	font-size:1.3em;
 	cursor:pointer;
-	width: 80%;
+	/* width: 80%; */
+}
+.titreFiltre{
+	/* text-align: center; */
+	display:inline-block;
+	/* margin-top: 0px; */
+	/* margin-right: auto; */
+	/* margin-bottom: 0px; */
+	/* margin-left: auto; */
+	/* font-weight: bold; */
+	/* font-size:1.3em; */
+	/* cursor:pointer; */
+	/* width: 80%; */
+}
+
+.titreFiltre:hover{
+	text-decoration:underline;
 }
 
 .repli,.depli{
@@ -35,10 +51,10 @@
 	left: 5px;
 	cursor: pointer;
 	width: 23px;
-	height: 21px;
+	height: 23px;
 	text-align: center;
 	border: 1px black solid;
-	border-radius: 20px;
+	border-radius: 8px;
 	font-weight: bold;
 	background:#fff;
 	box-shadow: 2px 2px 2x #b7b7b7;
@@ -47,7 +63,7 @@
 .repli:hover,.depli:hover{
 	text-shadow: 1px 1px 1px #9e9e9e;
 	box-shadow: 2px 2px 5px #b7b7b7;
-	background:#fef;
+	/* background:#fef; */
 }
 
 .supFiltre{
@@ -141,17 +157,18 @@
 	padding: 2px;
 }
 
-.explorer div{
+.folder{
 	display: inline-block;
-    width: 140px;
-    height: 24px;
-    overflow: hidden;
-	cursor:pointer;
+	width: 135px;
+	height: 24px;
+	overflow: hidden;
+	cursor: pointer;
 	white-space: nowrap;
-    /* border: solid 1px; */
+	position: relative;
+	margin-right: 5px;
 }
 
-.explorer div:hover{
+.folder:hover{
 	background:#ddf
 }
 
@@ -172,7 +189,7 @@
 	right: 10px;
 	bottom: 10px;
 	cursor:pointer;
-	width:80px;
+	width:70px;
 }
 
 .parcourir{
@@ -182,3 +199,29 @@
 	cursor:pointer;
 	width:80px;
 }
+
+.checked,.unChecked{
+	position: absolute;
+	right: 0px;
+	top: 3px;
+	height: 19px;
+	width: 22px;
+	color: #888;
+	border: solid #777 1px;
+	text-align: center;
+	border-radius: 3px;
+	background: white;
+}
+
+.checked:hover,.unChecked:hover{
+	background:#0060DF;
+	color:#fff;
+	border: solid black 1px;
+}
+
+.checked{
+	background:#0060DF;
+	color:white;
+	border: solid black 1px;
+}
+

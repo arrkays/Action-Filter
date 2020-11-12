@@ -7,7 +7,7 @@
   "default_locale": "fr",
   "browser_specific_settings": {
     "gecko": {
-      "strict_min_version": "78",
+      "strict_min_version": "68.3",
 	  "id": "florent.mouneau@filter.com"
     }
   },
