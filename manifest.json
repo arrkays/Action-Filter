@@ -29,6 +29,7 @@
     "accountsRead",
     "downloads",
     "activeTab",
+    "menus.overrideContext",
 	"storage"
   ],
   

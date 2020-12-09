@@ -106,14 +106,16 @@ function addEventFiltre(filtre){
 	});
 	
 	//Explorateur parcourir
-	filtre.querySelector('.parcourir').addEventListener('click', ()=>{
+	filtre.querySelector('.parcourir').addEventListener('click', (e)=>{
 		browser.extension.getBackgroundPage().browser.accounts.get(accountSelected).then((e)=>{
 			buildExplorer(e.folders, filtre, filtre.querySelector('.destReelle').value);
+			//openEplorerAt(filtre.querySelector('.dest').value, filtre.querySelector('.destReelle').value, e.folders, filtre,"");
 			filtre.querySelector('.valideFolder').style.display = "block";
 			filtre.querySelector('.parcourir').style.display = "none";
 			document.querySelector('#save').style.background="#0060DF";
 			filtre.querySelector('.explorer').style.display = "block";
 		});
+		e.stopPropagation();
 	});
 	
 	//Explorateur Valider
@@ -125,14 +127,6 @@ function addEventFiltre(filtre){
 	});
 	
 	//Déplier filtre
-	/*filtre.querySelector('.depli').addEventListener('click', ()=>{
-		displaFiltre(filtre, "block");
-	});
-	
-	filtre.querySelector('.repli').addEventListener('click', ()=>{
-		displaFiltre(filtre, "none");
-	});
-	*/
 	filtre.querySelector('.headerFiltre').addEventListener('click', ()=>{
 		//displaFiltre(filtre, "none");
 		//console.log("header been click");
@@ -153,7 +147,8 @@ function addFiltre(titre){
 	div.innerHTML = document.getElementById('sourceFiltre').innerHTML;
 	div.querySelector('.titreFiltre').innerHTML=titre;
 	addEventFiltre(div);
-	divFiltres.append(div);
+	// divFiltres.append(div);
+	divFiltres.insertAdjacentElement('afterbegin', div);
 	
 	return div;
 }
@@ -225,8 +220,7 @@ function makeFilters(filtres, display){
 	filtres.forEach((filtre)=>{
 		//creation du filtre
 		filtreDiv = addFiltre(filtre.titre);
-		if(filtre.isAnd)
-			filtreDiv.querySelector(".isAnd").checked = true;
+		filtreDiv.querySelector(".isAnd").checked = filtre.isAnd;
 		filtreDiv.querySelector(".dest").value = filtre.destination;
 		filtreDiv.querySelector(".destReelle").value = filtre.destinationReelle;
 

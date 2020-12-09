@@ -116,16 +116,22 @@
 }
 
 
+/* #ajout_filtre{ */
+	/* margin-top:0px; */
+	/* margin-bottom: 10px; */
+	/* text-align: center; */
+	/* cursor:pointer; */
+/* } */
+
+
 #ajout_filtre{
-	margin-top:0px;
-	margin-bottom: 10px;
-	text-align: center;
-	cursor:pointer;
-}
-
-
-#ajout_filtre button{
-	color:green;
+	color:white;
+	box-shadow: grey 3px 3px 3px;
+	margin: 10px 45px 0px 0px;
+	background:#0c8669;
+	height: 34px;
+	/* width: 66px; */
+	font-size: 23px;
 	cursor:pointer;
 }
 
@@ -172,6 +178,10 @@
 	background:#ddf
 }
 
+.folder:hover .unChecked{
+	display:block;
+}
+
 .icoFolder{
 	font-size:14px;
 }
@@ -211,7 +221,12 @@
 	text-align: center;
 	border-radius: 3px;
 	background: white;
+	
 }
+.unChecked{
+	display: none;
+}
+
 
 .checked:hover,.unChecked:hover{
 	background:#0060DF;

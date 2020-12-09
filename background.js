@@ -240,8 +240,8 @@ function concatElement(e){
 }
 
 browser.menus.onShown.addListener((info, tab) => {
-	console.log(info.selectedMessages.messages);
 	
+		
 	//si le message click droité n'est pas selectionné
 	if(info.selectedMessages.messages.length == 1){
 		//on recréé un menu juste pour ce mesage
@@ -266,7 +266,8 @@ browser.menus.onShown.addListener((info, tab) => {
 			});
 		}
 		
-		browser.menus.refresh()
+		browser.menus.refresh();
+		browser.menus.overrideContext({context: "tab", showDefaults:false, tabId:tab.id});
 });
 
 browser.browserAction.onClicked.addListener(()=>{

@@ -11,8 +11,6 @@ function buildExplorer(folder, divFiltre, originePath, tree=""){
 			tree.push({"name":folder.name, "folder":folder});
 			destReelle = folder.path;
 			dest = getNamePath(tree);
-			//divFiltre.querySelector(".destReelle").value = folder.path;
-			//divFiltre.querySelector(".dest").value = getNamePath(tree);
 			subFolder = folder.subFolders;
 			
 			
@@ -32,8 +30,6 @@ function buildExplorer(folder, divFiltre, originePath, tree=""){
 			tree=[{name:"", "folder":folder}];
 			destReelle = "";
 			dest = "";
-			// divFiltre.querySelector(".dest").value = "";
-			// divFiltre.querySelector(".destReelle").value = "";
 			subFolder = folder;
 		}
 		
@@ -66,13 +62,51 @@ function buildExplorer(folder, divFiltre, originePath, tree=""){
 		
 		divFiltre.querySelector(".dest").value = dest;
 		divFiltre.querySelector(".destReelle").value = destReelle;
-		
-		
 }
 
-// retour un folder en foncation du path
-function getFolder(path, folder){
-	//todo
+// ouvre un folder au sous dossier du path
+function openEplorerAt(path, pathReelle, folder, filtre, tree){
+	if(path.indexOf("/") != -1){
+		let nom = path.split("/")[0];
+		let subFolder;
+		
+		if(tree!=""){//si on est dans un sous dossier
+			tree.push({"name":folder.name, "folder":folder});
+			destReelle = folder.path;
+			subFolder = folder.subFolders;
+			console.log("subF");
+		}
+		else{//si on est a la racine
+			tree="123";
+			console.log(tree);
+			tree=new Array();
+			console.log("tree->");
+			console.log(tree);
+			tree.push({name:"", "folder":folder});
+
+			console.log(tree);
+			destReelle = "";
+			subFolder = folder;
+			console.log("racine");
+			console.log(tree);
+		}
+		console.log(tree);
+		subFolder.forEach((subF)=>{
+			//console.log("if("+subF.name+" == "+nom+")");
+			if(subF.name == nom){
+				path = path.substring(path.indexOf("/")+1);
+				openEplorerAt(path, pathReelle, subF.subFolders, filtre, tree);
+				console.log("recuecive->");
+			}
+		});
+	}
+	else{
+		console.log(folder);
+		console.log(filtre);
+		console.log(pathReelle);
+		console.log(tree);
+		buildExplorer(folder, filtre, pathReelle, tree);
+	}
 }
 
 function getNamePath(tree){
