@@ -216,7 +216,7 @@ function load(compte){
 
 
 //on rempli titre et dest 
-function makeFilters(filtres, display){
+function makeFilters(filtres){
 	filtres.forEach((filtre)=>{
 		//creation du filtre
 		filtreDiv = addFiltre(filtre.titre);

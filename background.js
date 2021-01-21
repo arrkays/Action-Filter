@@ -131,8 +131,8 @@ function findDestination(msg){
 function et(condition, msg){
 	var res = true;
 	for(let condi of condition){
-
-		let msgElmnt = concatElement(msg[condi.element]);
+		condi.pattern = condi.pattern.toLocaleLowerCase();
+		let msgElmnt = concatElement(msg[condi.element]).toLocaleLowerCase();
 		console.log(msgElmnt+" ----> "+condi.operateur+" <---- "+condi.pattern +"?");
 		//contien
 		if(condi.operateur == "contient"){
@@ -180,8 +180,8 @@ function ou(condition, msg){
 	var res = false;
 	console.log(condition);
 	for(let condi of condition){
-
-		let msgElmnt = concatElement(msg[condi.element]);
+		condi.pattern = condi.pattern.toLocaleLowerCase();
+		let msgElmnt = concatElement(msg[condi.element]).toLocaleLowerCase();
 		console.log(msgElmnt+" "+condi.operateur+" "+condi.pattern +"?");
 		//contien
 		if(condi.operateur == "contient"){
