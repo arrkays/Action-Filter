@@ -209,7 +209,7 @@ function ou(condition, msg){
 			}
 		}
 		else if(condi.operateur == "commence"){
-			if(msgElmnt.startWith(condi.pattern)){
+			if(msgElmnt.startsWith(condi.pattern)){
 				res = true;
 				break;
 			}
