@@ -9,6 +9,10 @@
 	font-size: 19px;
 }
 
+#recherche{
+	width : 100%;
+}
+
 .filtre{
 	position:relative;
 	width : 605px;

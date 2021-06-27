@@ -48,6 +48,21 @@ document.querySelector('#ajout_filtre').addEventListener('click', (e)=>{
 	document.querySelector('#save').style.background="#0060DF";
 });
 
+//Recherche
+document.querySelector('#recherche').addEventListener('keyup', (e)=>{
+	var str = e.target.value;
+	
+	comptes[accountSelected].forEach(filtre=>{
+		
+		//si on trouve la string rechercher dans le titre ou dans la destination on l'affiche
+		if(filtre.titre.indexOf(str) != -1  || filtre.destination.indexOf(str) != -1){
+			document.querySelector('#'+filtre.titre).style.display = "block";
+		}
+		else{//sinon on le cache
+			document.querySelector('#'+filtre.titre).style.display = "none";
+		}
+	});
+});
 
 function addEventCondi(ligne){
 	//supprimer ligne conditionelle 
@@ -132,7 +147,6 @@ function addEventFiltre(filtre){
 		//console.log("header been click");
 		toggleFilter(filtre);
 	});
-	
 	
 }
 
@@ -223,7 +237,7 @@ function makeFilters(filtres){
 		filtreDiv.querySelector(".isAnd").checked = filtre.isAnd;
 		filtreDiv.querySelector(".dest").value = filtre.destination;
 		filtreDiv.querySelector(".destReelle").value = filtre.destinationReelle;
-
+		filtreDiv.id = filtre.titre;
 		
 		//ajout des condition
 		filtre.condition.forEach((condi)=>{
