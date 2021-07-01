@@ -50,17 +50,19 @@ document.querySelector('#ajout_filtre').addEventListener('click', (e)=>{
 
 //Recherche
 document.querySelector('#recherche').addEventListener('keyup', (e)=>{
-	var str = e.target.value;
-	
+	var str = e.target.value.toLowerCase();
+	var i = 0;
 	comptes[accountSelected].forEach(filtre=>{
 		
 		//si on trouve la string rechercher dans le titre ou dans la destination on l'affiche
-		if(filtre.titre.indexOf(str) != -1  || filtre.destination.indexOf(str) != -1){
-			document.querySelector('#'+filtre.titre).style.display = "block";
+		if(filtre.titre.toLowerCase().indexOf(str) != -1  || filtre.destination.toLowerCase().indexOf(str) != -1){
+			document.querySelector('#id'+i).style.display = "block";
 		}
 		else{//sinon on le cache
-			document.querySelector('#'+filtre.titre).style.display = "none";
+			document.querySelector('#id'+i).style.display = "none";
 		}
+		
+		i++;
 	});
 });
 
@@ -231,13 +233,14 @@ function load(compte){
 
 //on rempli titre et dest 
 function makeFilters(filtres){
+	var i = 0;
 	filtres.forEach((filtre)=>{
 		//creation du filtre
 		filtreDiv = addFiltre(filtre.titre);
 		filtreDiv.querySelector(".isAnd").checked = filtre.isAnd;
 		filtreDiv.querySelector(".dest").value = filtre.destination;
 		filtreDiv.querySelector(".destReelle").value = filtre.destinationReelle;
-		filtreDiv.id = filtre.titre;
+		filtreDiv.id = "id"+i;
 		
 		//ajout des condition
 		filtre.condition.forEach((condi)=>{
@@ -248,6 +251,7 @@ function makeFilters(filtres){
 		});
 		
 		displaFiltre(filtreDiv, "none");
+		i++;
 	});
 }
 
