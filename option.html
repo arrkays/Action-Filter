@@ -7,8 +7,20 @@
 	<body>
 		<div id="divSave">
 			<select id="selectAcount"></select>
-			<button id="ajout_filtre">Ajouter filtre</button>
-			<button id="save">save</button>
+			<button id="ajout_filtre" title="ajouter un filtre">+1 filtre</button>
+			<button id="export" title="inmporter / exporter filtre">🠑🠓</button>
+			<button id="save" title="enrgistrer">save</button>
+			<div id="impExp">
+				<div class="titre">
+					import/expor
+					<div id="fermerImport">❌</div>
+				</div>
+				<textarea id="textToImp"></textarea>
+				<br/>
+				ajouter aux filtres déjà existants <input type="checkbox" id="keepFilter" checked />
+				</br>
+				<button id="import">importer</button>
+			</div>
 			<br>
 			<br>
 			<input type="text" placeholder="Rechercher un filtre" id="recherche"/>
@@ -16,12 +28,7 @@
 		
 		<div id="filtres">
 		</div>
-
-		<!-- <button >ajout filtre</button> -->
-
-			
-
-		
+	
 		<!-- source element to build filter -->
 		
 		<!-- FILTRE -->
@@ -46,12 +53,9 @@
 				<button class="parcourir">Parcourir</button>
 				<button class="valideFolder">Valider</button>
 			</div>
-
 			
 		</div>
 			
-
-		
 		<!-- LIGNE CONDI -->
 		<div id="sourceLineCondi" style="display:none">
 			<select class="selectElement">

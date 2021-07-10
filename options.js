@@ -66,6 +66,40 @@ document.querySelector('#recherche').addEventListener('keyup', (e)=>{
 	});
 });
 
+//Import / export
+document.querySelector('#export').addEventListener('click', (e)=>{
+	document.querySelector('#impExp').style.display = "block";
+	document.querySelector('#textToImp').value = JSON.stringify(comptes[accountSelected]);
+	document.getElementById("textToImp").focus();
+    document.getElementById("textToImp").select();
+});
+
+document.querySelector('#import').addEventListener('click', (e)=>{
+	var strImp = document.querySelector('#textToImp').value;
+	var imp = JSON.parse(strImp);
+
+	
+	if(document.querySelector('#keepFilter').checked){
+		imp = imp.concat(comptes[accountSelected]);
+	}
+	
+	//modification de l'objet
+	comptes[accountSelected] = imp;
+	
+	//on save en mémoire
+	browser.storage.local.set({"comptes":comptes}).then(()=>{
+		document.querySelector('#impExp').style.display = "none";
+		document.querySelector('#filtres').innerHTML = "";
+		
+		load(accountSelected);
+	});
+});
+
+document.querySelector('#fermerImport').addEventListener('click', (e)=>{
+	document.querySelector('#impExp').style.display = "none";
+});
+
+//Filtres
 function addEventCondi(ligne){
 	//supprimer ligne conditionelle 
 	ligne.querySelector('.supCondi').addEventListener('click', (e)=>{

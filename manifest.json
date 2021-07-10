@@ -30,7 +30,8 @@
     "downloads",
     "activeTab",
     "menus.overrideContext",
-	"storage"
+	"storage",
+	"downloads"
   ],
   
   
