@@ -53,6 +53,10 @@ button{
 	text-decoration:underline;
 }
 
+.inputTitre{
+	text-align: center;
+}
+
 .repli,.depli{
 	position: absolute;
 	top: 5px;

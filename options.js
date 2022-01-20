@@ -40,11 +40,9 @@ document.querySelector('#selectAcount').addEventListener('change', (e)=>{
 //ajout filtre event
 document.querySelector('#ajout_filtre').addEventListener('click', (e)=>{
 	
-	var titre = window.prompt("Nom du filtre?");
-	if(titre){
-		var f = addFiltre(titre);
-		addCondi(f);
-	}
+	var f = addFiltre("<input type='text' placeholder='Nom du filtre?' class='inputTitre' />");
+	addCondi(f);
+	f.querySelector('.inputTitre').focus();
 	document.querySelector('#save').style.background="#0060DF";
 });
 
@@ -123,14 +121,13 @@ function addEventFiltre(filtre){
 
 	
 	//changer titre
-	filtre.querySelector('.titreFiltre').addEventListener('click', (e)=>{
-		var titre = window.prompt("Nom du filtre?");
-		if(titre){
-			e.target.innerHTML = titre;
-		}
-		document.querySelector('#save').style.background="#0060DF";
-		e.stopPropagation();
-	});
+	if(! filtre.querySelector('.inputTitre'))
+		filtre.querySelector('.titreFiltre').addEventListener('click', (e)=>{
+			e.target.innerHTML = "<input type='text' placeholder='Nom du filtre?' value='"+e.target.innerHTML+"' class='inputTitre' />";
+			document.querySelector('#save').style.background="#0060DF";
+			e.target.querySelector(".inputTitre").focus();
+			e.stopPropagation();
+		});
 	
 	//Ajouter ligne conditionelle
 	filtre.querySelector('.ajouter').addEventListener('click', (e)=>{
@@ -217,9 +214,10 @@ function addCondi(divFiltre){
 function save(){
 	//tableau de filtre
 	var filtres = [];
-	
+	var err = false;
+
 	document.querySelectorAll(".filtre").forEach((filtre)=>{//pour chaque filtre
-		var titreFiltre = filtre.querySelector(".titreFiltre").innerHTML;
+		var titreFiltre = (filtre.querySelector(".inputTitre")) ? filtre.querySelector(".inputTitre").value : filtre.querySelector(".titreFiltre").innerHTML;
 		var isAnd = filtre.querySelector(".isAnd").checked;
 		var dest = filtre.querySelector(".dest").value;
 		var destReelle = filtre.querySelector(".destReelle").value;
@@ -241,18 +239,39 @@ function save(){
 		}
 		
 		//on l'ajoute  a la colection si pattern et si destination
-		if(newFiltre.condition && newFiltre.destination)
+		filtre.querySelector(".inputLineCondi").style.background = "white";
+		filtre.querySelector(".dest").style.background = "white";
+		if(filtre.querySelector(".inputTitre"))
+			filtre.querySelector(".inputTitre").style.background = "white";
+
+		if(newFiltre.condition.length && newFiltre.destination != "" && newFiltre.titre != ""){
+			filtre.querySelector(".titreFiltre").innerHTML = titreFiltre;
 			filtres.push(newFiltre);
-		else
-			alert("Le filtre "+titreFiltre+" doit contenir au moins une destination et un filtre");
+		}
+		else{
+			if(newFiltre.condition.length == 0){
+				filtre.querySelector(".inputLineCondi").style.background = "red";
+			}
+			
+			if(newFiltre.destination == ""){
+				filtre.querySelector(".dest").style.background = "red";
+			}
+
+			if(newFiltre.titre == ""){
+				filtre.querySelector(".inputTitre").style.background = "red";
+			}
+			
+			document.querySelector("#save").style.background = "red";
+			err = true;
+		}
 	});
 	
 	
 	comptes[accountSelected] = filtres;
 
 	browser.storage.local.set({"comptes":comptes}).then(()=>{
-		document.querySelector("#save").style.background="grey";
-		//document.querySelector("#save").style.color="white";
+		if(!err)
+			document.querySelector("#save").style.background="grey";
 	});
 }
 
